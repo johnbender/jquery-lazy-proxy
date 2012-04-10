@@ -19,8 +19,6 @@
 			return elem;
 		});
 
-		jQuery.LazyProxy.init();
-
 		$("div").bar("first", "second").force();
 
 		deepEqual(first, "first");
@@ -34,8 +32,6 @@
 			fooRan = true;
 			return elem;
 		});
-
-		jQuery.LazyProxy.init();
 
 		$divs = $( "div" );
 		$divs.foo();
@@ -58,8 +54,6 @@
 		$.fn.foo = jQuery.functor(pushOrder);
 		$.fn.bar = jQuery.functor(pushOrder);
 
-		jQuery.LazyProxy.init();
-
 		$divs = $( "div" ).foo().bar().force();
 
 		// the first element should be pushed on the stack twice
@@ -81,8 +75,6 @@
 		$.fn.bar = function() {
 			return this.map(pushOrder);
 		};
-
-		jQuery.LazyProxy.init();
 
 		$divs = $( "div" ).foo().bar().force();
 

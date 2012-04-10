@@ -1,10 +1,13 @@
-
 (function( jQuery, undefined ) {
+	// TODO this is going to be the primary slowdown in the inclusion of this library
+	//      speeding up the init will reduce the object set size required for the loop
+	//      fusion to be a net win
 	jQuery.LazyProxy = function() {
 		this.identity = this.composed = function identity( elem ){
 			return elem;
 		};
 
+		// TODO assignment of properties directly on this may be faster
 		$.extend(this, {
 			compose: function( a, aArgs, b ) {
 				return function( elem ){
@@ -20,7 +23,7 @@
 			},
 
 			proxyCallback: function( prop ){
-				var property = jQuery.fn[prop];
+				var property = jQuery.fn[ prop ];
 
 				return function() {
 					if( property.htmlMorphism ){
@@ -38,41 +41,27 @@
 			}
 		});
 
+		// TODO compilation step to generate method definitions might be faster
 		for( prop in jQuery.fn ){
-			var property;
-
-			if( typeof jQuery.fn[prop] !== "function" ){
+			if( typeof jQuery.fn[ prop ] !== "function" ){
 				continue;
 			}
 
-			this[prop] = this.proxyCallback( prop );
+			this[ prop ] = this.proxyCallback( prop );
 		}
 	};
 
 	jQuery.functor = function( htmlMorphism ) {
 		var fnMethod = function(){
-			var $this = this,
-			args = Array.prototype.slice.call(arguments);
+			var $this = this, argsArray = arguments;
 
-			this.map(function( elem ){
-				return htmlMorphism.apply( $this, args.shift(elem) );
+			$.map(this, function( elem ){
+				var args = Array.prototype.slice.call( argsArray );
+				args.unshift( elem );
+				return htmlMorphism.apply( $this, args );
 			});
-		};
 
-		fnMethod.htmlMorphism = htmlMorphism;
-		return fnMethod;
-	};
-
-	jQuery.eachFunctor = function( htmlMorphism ) {
-		var fnMethod = function(){
-			var $this = this,
-			args = Array.prototype.slice.call(arguments);
-
-			console.log( args );
-
-			this.each(function( i, elem ){
-				htmlMorphism.apply( $this, args.shift(elem) );
-			});
+			return this;
 		};
 
 		fnMethod.htmlMorphism = htmlMorphism;
@@ -80,9 +69,15 @@
 	};
 
 	jQuery.LazyProxy.init = function() {
-		jQuery.LazyProxy.prototype = jQuery.fn;
-		jQuery.fn.init.prototype = new jQuery.LazyProxy();
+		var oldInit = jQuery.fn.init;
+
+		jQuery.fn.init = function( selector, context, rootjQuery ) {
+			oldInit.prototype = new jQuery.LazyProxy();
+			var jQueryArray = new oldInit( selector, context, rootjQuery );
+			return jQueryArray;
+		};
 	};
 
+	jQuery.LazyProxy.prototype = jQuery.fn;
 	jQuery.LazyProxy.init();
 })( jQuery );
