@@ -10,25 +10,6 @@
 		}
 	});
 
-	test( "function defined with jQuery.functor will accumulate", function() {
-		var fooFn = function() {};
-		$.fn.foo = jQuery.functor(fooFn);
-
-		jQuery.LazyProxy.init();
-
-		// deepEqual($("div").foo().accumulatedCalls[0].morphism, fooFn);
-	});
-
-	test( "function's not defined with jQuery.functor will execute and not accumulate", function() {
-		$.fn.head = function() { return this.first(); };
-
-		jQuery.LazyProxy.init();
-
-		// equal($("div").head().composed, jQuery.LazyProxy.identity);
-		ok($("div").length > 1, "there are at least 2 divs in the page");
-		equal($("div").head().length, 1, "head should execute and shrink the set size to 1");
-	});
-
 	test( "arguments are forwarded properly to functions created with jQuery.functor", function() {
 		var first, second;
 
