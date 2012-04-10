@@ -3,47 +3,48 @@
 	//      speeding up the init will reduce the object set size required for the loop
 	//      fusion to be a net win
 	jQuery.LazyProxy = function() {
-		this.identity = this.composed = function identity( elem ){
+		this.identity = function ( elem ){
 			return elem;
 		};
 
 		// TODO assignment of properties directly on this may be faster
-		$.extend(this, {
-			compose: function( a, aArgs, b ) {
-				return function( elem ){
-					var args = Array.prototype.slice.call(aArgs);
+		this.compose = function( a, aArgs, b ) {
+			return function( elem ){
+				var args = Array.prototype.slice.call(aArgs);
 
-					args.unshift(b.call( elem, elem ));
-					return a.apply( elem, args );
-				};
-			},
+				args.unshift(b.call( elem, elem ));
+				return a.apply( elem, args );
+			};
+		};
 
-			force: function() {
-				return jQuery( jQuery.map(this, this.composed) );
-			},
+		this.force = function() {
+			if( !this.composed ) { return this; };
+			jQuery.map( this, this.composed );
+			this.composed = undefined;
+			return this;
+		};
 
-			proxyCallback: function( prop ){
-				var property = jQuery.fn[ prop ];
+		this.proxyCallback = function( prop ){
+			var property = jQuery.fn[ prop ];
 
-				return function() {
-					if( property.htmlMorphism ){
-						this.composed = this.compose(property.htmlMorphism, arguments, this.composed);
+			return function() {
+				if( property.htmlMorphism ) {
+					this.composed = this.compose( property.htmlMorphism, arguments, this.composed || this.identity );
 
-						return this;
-					} else {
-						if( this.composed !== this.identity ) {
-							this.force();
-						}
-
-						return property.apply(this, arguments);
+					return this;
+				} else {
+					if( this.composed ) {
+						this.force();
 					}
-				};
-			}
-		});
+
+					return property.apply( this, arguments );
+				}
+			};
+		};
 
 		// TODO compilation step to generate method definitions might be faster
 		for( prop in jQuery.fn ){
-			if( typeof jQuery.fn[ prop ] !== "function" ){
+			if( !jQuery.fn.hasOwnProperty( prop ) || typeof jQuery.fn[ prop ] !== "function" ){
 				continue;
 			}
 
@@ -53,29 +54,32 @@
 
 	jQuery.functor = function( htmlMorphism ) {
 		var fnMethod = function(){
-			var $this = this, argsArray = arguments;
+			var $this = this, argsArray = Array.prototype.slice.call( arguments );
 
-			$.map(this, function( elem ){
-				var args = Array.prototype.slice.call( argsArray );
+			return this.map(function( i, elem ){
+				var args = argsArray;
 				args.unshift( elem );
-				return htmlMorphism.apply( $this, args );
+				return htmlMorphism.apply( elem, args );
 			});
-
-			return this;
 		};
 
 		fnMethod.htmlMorphism = htmlMorphism;
 		return fnMethod;
 	};
 
+	jQuery.LazyProxy.oldInit = jQuery.fn.init;
 	jQuery.LazyProxy.init = function() {
-		var oldInit = jQuery.fn.init;
+		var oldInit = this.oldInit;
 
 		jQuery.fn.init = function( selector, context, rootjQuery ) {
 			oldInit.prototype = new jQuery.LazyProxy();
 			var jQueryArray = new oldInit( selector, context, rootjQuery );
 			return jQueryArray;
 		};
+	};
+
+	jQuery.LazyProxy.revert = function() {
+		jQuery.fn.init = this.oldInit;
 	};
 
 	jQuery.LazyProxy.prototype = jQuery.fn;

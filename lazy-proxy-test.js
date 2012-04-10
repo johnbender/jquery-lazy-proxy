@@ -80,4 +80,29 @@
 
 		deepEqual( [$divs[0], $divs[1]], elementOrder.slice(0, 2) );
 	});
+
+	test( "lazy functions actually alter the dom elements", function() {
+		$.fn.bar = jQuery.functor(function( elem ) {
+			elem.setAttribute("data-foo", "bar");
+		});
+
+		$( "div" ).bar().force();
+
+		$( "div" ).each(function(i, elem) {
+			deepEqual( elem.getAttribute("data-foo"), "bar");
+		});
+	});
+
+	test( "lazy functions reset composed after force", function() {
+		$.fn.bar = jQuery.functor(function( elem ) {
+			elem.setAttribute("data-foo", "bar");
+		});
+
+		var divs = $( "div" );
+		equal( divs.composed, undefined );
+		divs.bar();
+		ok( divs.composed, "composed is not the default of undefined" );
+		divs.force();
+		equal( divs.composed, undefined );
+	});
 })( jQuery, QUnit );
