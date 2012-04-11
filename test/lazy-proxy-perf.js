@@ -5,7 +5,7 @@ for( var i = 0; i <= 100; i++ ){
 }
 
 var addClassRaw = function( elem ){
-  elem.setAttribute( "class", elem.getAttribute( "class" + " foo" ));
+  elem.setAttribute( "class", elem.getAttribute( "class" ) + " foo" );
   return elem;
 };
 
