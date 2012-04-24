@@ -151,4 +151,14 @@
 
 		deepEqual( ["foo", "bar"].toString(), msg );
 	});
+
+	test( "default jQuery.fn methods should behave as normal", function() {
+		var $divs = $( "div" );
+
+		$divs.addClass( "normal-method-test" );
+
+		$divs.each(function(i, elem) {
+		  ok( elem.getAttribute( "class" ).indexOf( "normal-method-test" ) >= 0 );
+		});
+	});
 })( jQuery, QUnit );

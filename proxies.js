@@ -111,7 +111,6 @@
 		return fnMethod;
 	};
 
-	jQuery.LazyProxy.oldInit = jQuery.WarningProxy.oldInit = jQuery.fn.init;
 	jQuery.LazyProxy.init = function() {
 		var oldInit = this.oldInit;
 
@@ -132,10 +131,10 @@
 		};
 	};
 
-	jQuery.LazyProxy.revert = function() {
+	jQuery.LazyProxy.revert = jQuery.WarningProxy.revert = function() {
 		jQuery.fn.init = this.oldInit;
 	};
 
-	jQuery.LazyProxy.prototype = jQuery.fn;
-	jQuery.LazyProxy.init();
+	jQuery.LazyProxy.prototype = jQuery.WarningProxy.prototype = jQuery.fn;
+	jQuery.LazyProxy.oldInit = jQuery.WarningProxy.oldInit = jQuery.fn.init;
 })( jQuery );
