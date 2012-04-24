@@ -1,6 +1,6 @@
 # A Standard For Speed
 
-For either of the proxy objects included in `proxies.js` to have any value, plug in authors and ideally the jQuery core team, must provide the `HTMLElement` altering functions that underlie many of the jQuery core methods (eg `jQuery.fn.addClass` ) in one form or another. That is, while many of them don't actually use `jQuery.fn.map` or `jQuery.fn.each` they could be implemented that way. Without those functions end users cannot compose many of them to reduce the full set iterations for the proposed performance gain. For more information on those ideas please see the following links:
+For either of the proxy objects to have any value, plug-in authors and ideally the jQuery core team, must provide the `HTMLElement` altering functions that underlie many of the jQuery core methods in one form or another. That is, while many of them don't actually use `jQuery.fn.map` or `jQuery.fn.each` they could be implemented that way or the composable alteration could be provided along side. Without those functions end users cannot compose them to reduce the full set iterations for the proposed performance gain. For more information on those ideas please see the following links:
 
 * http://johnbender.us/2012/02/29/faster-javascript-through-category-theory/
 * http://johnbender.github.com/auto-jquery-optimization-paper/ (work in progress)
@@ -15,7 +15,7 @@ This library is only meant as a development tool as its inclusion does incur a p
 
 ```html
 <script type="text/javascript" src="jquery.js"></scrip>
-<script type="text/javascript" src="proxies.js"></script>
+<script type="text/javascript" src="warning.js"></script>
 ```
 
 Then before your jQuery chains execute
@@ -33,6 +33,17 @@ This is a proof of concept for automatic loop fusion over jQuery sets using lazy
 ## Operation
 
 [Loop fusion](http://en.wikipedia.org/wiki/Loop_fusion) is a fairly common performance optimization and in most cases results in must faster code. By making jquery `$.fn` methods lazy by placing a proxy in the prototype chain between a new jQuery object and its normal prototype `$.fn` this library tracks and can, in certain cases, perform automatic loop fusion.
+
+```html
+<script type="text/javascript" src="jquery.js"></scrip>
+<script type="text/javascript" src="lazy.js"></script>
+```
+
+Then before your jQuery chains execute
+
+```javascript
+jQuery.WarningProxy.init();
+```
 
 An example:
 
