@@ -131,11 +131,11 @@
 	test( "should increment its count on method invocation", function() {
 		var $divs = $( "div" );
 
-		deepEqual( $divs._proxy.chainCount, 0, "chainCount should init to 0");
+		deepEqual( $divs._proxyState.chainCount, 0, "chainCount should init to 0");
 
 		$divs.bar().baz();
 
-		deepEqual( $divs._proxy.chainCount, 1, "chainCount should increment on $.fn method invocation");
+		deepEqual( $divs._proxyState.chainCount, 1, "chainCount should increment on $.fn method invocation");
 	});
 
 	test( "should log a message with all the method names", function() {
@@ -146,7 +146,6 @@
 		};
 
 		// TODO make # of chained methods dependent on _proxy.warnThreshold
-		$divs._proxy.test = "zomg";
 		$divs.foo().bar().baz();
 
 		deepEqual( ["foo", "bar"].toString(), msg );

@@ -54,36 +54,9 @@
 	};
 
 	jQuery.WarningProxy = function() {
-		this._proxy = {
+		this._proxyState = {
 			chainCount: 0,
-			methodNames: [],
-			warnThreshold: 1,
-
-			log: function( msg ){
-				if( window.console ){
-					console.log( msg );
-				}
-			}
-		};
-
-		this.proxyCallback = function( prop ) {
-			var property = jQuery.fn[ prop ],
-				proxy = this._proxy,
-				propertyName = prop;
-
-			return function() {
-				if( property.htmlMorphism ) {
-					proxy.methodNames.push( propertyName );
-					proxy.chainCount+=1;
-				}
-
-				if( proxy.chainCount > proxy.warnThreshold ){
-					proxy.log( proxy.methodNames.toString() );
-				}
-
-				property.apply( this, arguments );
-				return this;
-			};
+			methodNames: []
 		};
 
 		// TODO compilation step to generate method definitions might be faster
@@ -92,7 +65,43 @@
 				continue;
 			}
 
-			this[ prop ] = this.proxyCallback( prop );
+			this[ prop ] = this._proxy.insert( prop );
+		}
+	};
+
+	jQuery.WarningProxy.prototype = jQuery.fn;
+
+	jQuery.WarningProxy.prototype._proxy = {
+		warnThreshold: 1,
+
+		log: function( msg ){
+			if( window.console ){
+				console.log( msg );
+			}
+		},
+
+		insert: function( prop ) {
+			var property = jQuery.fn[ prop ],
+				propertyName = prop;
+
+			return function() {
+				var	proxy = this._proxy,
+					proxyState = this._proxyState;
+
+				// if the pure underlying dom manipulation is available count it
+				if( property.htmlMorphism ) {
+					proxyState.methodNames.push( propertyName );
+					proxyState.chainCount++;
+				}
+
+				// if the count gets larger than the configured threshold "log" it
+				if( proxyState.chainCount > proxy.warnThreshold ){
+					proxy.log( proxyState.methodNames.toString() );
+				}
+
+				property.apply( this, arguments );
+				return this;
+			};
 		}
 	};
 
@@ -135,6 +144,6 @@
 		jQuery.fn.init = this.oldInit;
 	};
 
-	jQuery.LazyProxy.prototype = jQuery.WarningProxy.prototype = jQuery.fn;
+	jQuery.LazyProxy.prototype = jQuery.fn;
 	jQuery.LazyProxy.oldInit = jQuery.WarningProxy.oldInit = jQuery.fn.init;
 })( jQuery );
