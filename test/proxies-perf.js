@@ -1,3 +1,5 @@
+jQuery.LazyProxy.init();
+
 for( var i = 0; i <= 100; i++ ){
   var div = document.createElement("div");
   div.setAttribute("data-test", "true");
