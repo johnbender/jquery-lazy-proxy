@@ -3,6 +3,7 @@
 	//      speeding up the init will reduce the object set size required for the loop
 	//      fusion to be a net win
 	jQuery.LazyProxy = function() {
+		//TODO create a _proxy object to avoid namespace collisions
 		this.identity = function ( elem ){
 			return elem;
 		};
@@ -52,9 +53,52 @@
 		}
 	};
 
+	jQuery.WarningProxy = function() {
+		this._proxy = {
+			chainCount: 0,
+			methodNames: [],
+			warnThreshold: 1,
+
+			log: function( msg ){
+				if( window.console ){
+					console.log( msg );
+				}
+			}
+		};
+
+		this.proxyCallback = function( prop ) {
+			var property = jQuery.fn[ prop ],
+				proxy = this._proxy,
+				propertyName = prop;
+
+			return function() {
+				if( property.htmlMorphism ) {
+					proxy.methodNames.push( propertyName );
+					proxy.chainCount+=1;
+				}
+
+				if( proxy.chainCount > proxy.warnThreshold ){
+					proxy.log( proxy.methodNames.toString() );
+				}
+
+				property.apply( this, arguments );
+				return this;
+			};
+		};
+
+		// TODO compilation step to generate method definitions might be faster
+		for( prop in jQuery.fn ){
+			if( !jQuery.fn.hasOwnProperty( prop ) || typeof jQuery.fn[ prop ] !== "function" ){
+				continue;
+			}
+
+			this[ prop ] = this.proxyCallback( prop );
+		}
+	};
+
 	jQuery.functor = function( htmlMorphism ) {
 		var fnMethod = function(){
-			var $this = this, argsArray = Array.prototype.slice.call( arguments );
+			var argsArray = Array.prototype.slice.call( arguments );
 
 			return this.map(function( i, elem ){
 				var args = argsArray;
@@ -67,12 +111,22 @@
 		return fnMethod;
 	};
 
-	jQuery.LazyProxy.oldInit = jQuery.fn.init;
+	jQuery.LazyProxy.oldInit = jQuery.WarningProxy.oldInit = jQuery.fn.init;
 	jQuery.LazyProxy.init = function() {
 		var oldInit = this.oldInit;
 
 		jQuery.fn.init = function( selector, context, rootjQuery ) {
 			oldInit.prototype = new jQuery.LazyProxy();
+			var jQueryArray = new oldInit( selector, context, rootjQuery );
+			return jQueryArray;
+		};
+	};
+
+ 	jQuery.WarningProxy.init = function() {
+		var oldInit = this.oldInit;
+
+		jQuery.fn.init = function( selector, context, rootjQuery ) {
+			oldInit.prototype = new jQuery.WarningProxy();
 			var jQueryArray = new oldInit( selector, context, rootjQuery );
 			return jQueryArray;
 		};
