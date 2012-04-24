@@ -24,7 +24,7 @@ Then before your jQuery chains execute
 jQuery.WarningProxy.init();
 ```
 
-That will alter the jQuery object initialization to include an instance of the `jQuery.WarningProxy` in the prototype chain above the jQuery object instance but below `jQuery.fn` where all the methods we know and love reside.
+That will alter the jQuery object initialization to include an instance of the `jQuery.WarningProxy` in the prototype chain above the jQuery object instance but below `jQuery.fn` where all the methods we know and love reside. Ultimately the library will log a warning to the console if the console object exists on `window` with the names of the methods that were chained.
 
 # jQuery.LazyProxy
 
