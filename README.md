@@ -1,6 +1,6 @@
 # A Standard For Speed
 
-For either of the proxy objects included in `proxies.js` to have any value to plug in authors, and ideally the jQuery core team, must provide the `HTMLElement` altering functions that underlie many of the jQuery core methods (eg `jQuery.fn.addClass` ) in one form or another. Without those functions end users cannot compose many of them to reduce the full set iterations for the proposed performance gain. For more information on those ideas please see the following links:
+For either of the proxy objects included in `proxies.js` to have any value, plug in authors and ideally the jQuery core team, must provide the `HTMLElement` altering functions that underlie many of the jQuery core methods (eg `jQuery.fn.addClass` ) in one form or another. That is, while many of them don't actually use `jQuery.fn.map` or `jQuery.fn.each` they could be implemented that way. Without those functions end users cannot compose many of them to reduce the full set iterations for the proposed performance gain. For more information on those ideas please see the following links:
 
 * http://johnbender.us/2012/02/29/faster-javascript-through-category-theory/
 * http://johnbender.github.com/auto-jquery-optimization-paper/ (work in progress)
