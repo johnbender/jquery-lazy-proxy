@@ -7,7 +7,7 @@ For either of the proxy objects to have any value, plug-in authors and ideally t
 
 # jQuery.WarningProxy
 
-This is a simplification of the original `jQuery.LazyProxy` (which is still included in the repository for further work). The idea is that developers should receive warnings when they care chaining one or more `$.fn` methods that iterate over the full set and have the pure function available for composition/fusing.
+This is a simplification of the original `jQuery.LazyProxy` (which is still included in the repository for further work). The idea is that developers should receive warnings when they are chaining one or more `$.fn` methods that iterate over the full set and have the pure function available for composition/fusing.
 
 ## Operation
 
@@ -83,4 +83,4 @@ $divs.show() // any $.fn will do
 
 Sadly the performance benefits of of the loop fusion appear to be outweighed by the argument juggling required to support arbitrary arguments, and also possibly by the JIT compilers/similar optimizations in modern browsers. A simple [jsperf example](http://jsperf.com/lazy-loop-fusion-vs-traditional-method-chaning/5) shows that the vanilla method chaining (unfused loops) beats the LazyProxy approach (lazily fused loops) but looses out to simple fusion through function composition.
 
-You can view the performance setup for the jsperf sample under `test/lazy-proxy-perf.js`
+You can view the performance setup for the jsperf sample under `test/proxies-perf.js`
