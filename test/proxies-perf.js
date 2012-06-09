@@ -35,3 +35,29 @@ $.fn.manualAddClearClass = function(){
     addClassRaw(clearClassRaw(elem));
   });
 };
+
+$.fn.removeAttr.composable = function( value ) {
+	return function( elem ) {
+		return $.removeAttr( elem, value );
+	};
+};
+
+$.fn.removeData.composable = function( name ) {
+	return function( elem ) {
+		return $.removeAttr( elem, name );
+	};
+};
+
+$.fn.cleanUpWithCompose = function( attrKey, dataKey ) {
+	var cleanAttr = $.fn.removeAttr.composable( attrKey ),
+		cleanData = $.fn.removeData.composable( dataKey ),
+		composed = function( elem ) { return cleanAttr( cleanData( elem )); };
+
+	return $.map( this, composed );
+};
+
+$.fn.cleanUpWithArgs = function( attrKey, dataKey ) {
+	return $.map( this, function( elem ) {
+		return $.removeData( $.removeAttr( elem, attrKey ), dataKey );
+	});
+};
