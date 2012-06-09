@@ -1,6 +1,6 @@
 jQuery.LazyProxy.init();
 
-for( var i = 0; i <= 100; i++ ){
+for( var i = 0; i <= window.testElementCount || 100; i++ ){
   var div = document.createElement("div");
   div.setAttribute("data-test", "true");
   $( div ).appendTo( "body" );
@@ -59,7 +59,8 @@ $.fn.cleanUpWithCompose = function( attrKey, dataKey ) {
 $.fn.cleanUpWithArgs = function( attrKey, dataKey ) {
 	return $.map( this, function( elem ) {
 		$.removeAttr( elem, attrKey );
-		return $.removeData( elem, dataKey );
+		$.removeData( elem, dataKey );
+		return elem;
 	});
 };
 
@@ -71,4 +72,6 @@ $.fn.cleanUpWithArgsFast = function( attrKey, dataKey ) {
 		$.removeData( elem, dataKey );
 		this[i] = elem;
 	}
+
+	return this;
 };
