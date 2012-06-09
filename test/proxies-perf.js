@@ -62,3 +62,13 @@ $.fn.cleanUpWithArgs = function( attrKey, dataKey ) {
 		return $.removeData( elem, dataKey );
 	});
 };
+
+$.fn.cleanUpWithArgsFast = function( attrKey, dataKey ) {
+	var length = this.length, elem;
+	for( var i = 0; i < length; i++ ){
+		elem = this[i];
+		$.removeAttr( elem, attrKey );
+		$.removeData( elem, dataKey );
+		this[i] = elem;
+	}
+};
