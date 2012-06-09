@@ -3,7 +3,8 @@ jQuery.LazyProxy.init();
 for( var i = 0; i <= (window.testElementCount || 100); i++ ){
   var div = document.createElement("div");
   div.setAttribute("data-test", "true");
-  $( div ).appendTo( "body" );
+	div.setAttribute("data-test-foo", "true");
+  $( div ).data("baz", "bak").appendTo( "body" );
 }
 
 var addClassRaw = function( elem ){
@@ -48,14 +49,6 @@ $.fn.removeData.composable = function( name ) {
 	};
 };
 
-$.fn.cleanUpWithCompose = function( attrKey, dataKey ) {
-	var cleanAttr = $.fn.removeAttr.composable( attrKey ),
-		cleanData = $.fn.removeData.composable( dataKey ),
-		composed = function( elem ) { return cleanAttr( cleanData( elem )); };
-
-	return $.map( this, composed );
-};
-
 $.fn.cleanUpWithArgs = function( attrKey, dataKey ) {
 	return $.map( this, function( elem ) {
 		$.removeAttr( elem, attrKey );
@@ -77,9 +70,20 @@ $.fn.cleanUpWithArgsElementReplace = function( attrKey, dataKey ) {
 };
 
 $.fn.cleanUpWithArgsElementAlter = function( attrKey, dataKey ) {
-	var length = this.length, elem;
+	var length = this.length;
 	for( var i = 0; i < length; i++ ){
 		$.removeAttr( this[i], attrKey );
+		$.removeData( this[i], dataKey );
+	}
+
+	return this;
+};
+
+$.fn.cleanUpWithArgsElementAlterThree = function( fstAttrKey, sndAttrKey, dataKey ) {
+	var length = this.length;
+	for( var i = 0; i < length; i++ ){
+		$.removeAttr( this[i], fstAttrKey );
+		$.removeAttr( this[i], sndAttrKey );
 		$.removeData( this[i], dataKey );
 	}
 
