@@ -124,3 +124,13 @@ $.fn.cleanUpWithArgsElementAlterThree = function( fstAttrKey, sndAttrKey, dataKe
 
 	return this;
 };
+
+$.fn.cleanUpJustAttrs = function( fstAttrKey, sndAttrKey ) {
+	var length = this.length;
+
+	while( length-- ){
+		$.removeAttr($.removeAttr( this[length], fstAttrKey ), sndAttrKey );
+	}
+
+	return this;
+};
