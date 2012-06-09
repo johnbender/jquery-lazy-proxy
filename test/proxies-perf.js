@@ -80,11 +80,12 @@ $.fn.cleanUpWithArgsElementAlter = function( attrKey, dataKey ) {
 };
 
 $.fn.cleanUpWithArgsElementAlterThree = function( fstAttrKey, sndAttrKey, dataKey ) {
-	var length = this.length;
-	for( var i = 0; i < length; i++ ){
-		$.removeAttr( this[i], fstAttrKey );
-		$.removeAttr( this[i], sndAttrKey );
-		$.removeData( this[i], dataKey );
+	var length = this.length, elem;
+	while( length-- ){
+		elem = this[length];
+		$.removeAttr( elem, fstAttrKey );
+		$.removeAttr( elem, sndAttrKey );
+		$.removeData( elem, dataKey );
 	}
 
 	return this;
