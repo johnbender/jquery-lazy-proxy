@@ -58,6 +58,7 @@ $.fn.cleanUpWithCompose = function( attrKey, dataKey ) {
 
 $.fn.cleanUpWithArgs = function( attrKey, dataKey ) {
 	return $.map( this, function( elem ) {
-		return $.removeData( $.removeAttr( elem, attrKey ), dataKey );
+		$.removeAttr( elem, attrKey );
+		return $.removeData( elem, dataKey );
 	});
 };
