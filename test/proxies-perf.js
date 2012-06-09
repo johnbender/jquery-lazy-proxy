@@ -64,13 +64,23 @@ $.fn.cleanUpWithArgs = function( attrKey, dataKey ) {
 	});
 };
 
-$.fn.cleanUpWithArgsFast = function( attrKey, dataKey ) {
+$.fn.cleanUpWithArgsElementReplace = function( attrKey, dataKey ) {
 	var length = this.length, elem;
 	for( var i = 0; i < length; i++ ){
 		elem = this[i];
 		$.removeAttr( elem, attrKey );
 		$.removeData( elem, dataKey );
 		this[i] = elem;
+	}
+
+	return this;
+};
+
+$.fn.cleanUpWithArgsElementAlter = function( attrKey, dataKey ) {
+	var length = this.length, elem;
+	for( var i = 0; i < length; i++ ){
+		$.removeAttr( this[i], attrKey );
+		$.removeData( this[i], dataKey );
 	}
 
 	return this;
