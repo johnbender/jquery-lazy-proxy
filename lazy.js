@@ -9,7 +9,9 @@
 
 		// TODO compilation step to generate method definitions might be faster
 		for( prop in jQuery.fn ){
-			if( !jQuery.fn.hasOwnProperty( prop ) || typeof jQuery.fn[ prop ] !== "function" ){
+			if( !jQuery.fn.hasOwnProperty( prop ) ||
+					typeof jQuery.fn[ prop ] !== "function" ||
+					prop === "force" ){
 				continue;
 			}
 
@@ -55,18 +57,17 @@
 					return this;
 				} else {
 					if( state.composed ) {
-						proxy.force.call( this );
+						return proxy.force.call( this );
 					}
 
-					property.apply( this, arguments );
-					return this;
+					return property.apply( this, arguments );
 				}
 			};
 		}
 	};
 
 	jQuery.fn.force = function() {
-		this._proxy.force.call( this );
+		return this._proxy.force.call( this );
 	};
 
 	jQuery.functor = function( htmlMorphism ) {

@@ -111,4 +111,16 @@
 		divs.force();
 		equal( divs.composed, undefined );
 	});
+
+	test( "filter functions should work properly", function() {
+		var $divs = $( "<div>" );
+
+		ok( $divs.length > 0, "there are elements in the list" );
+
+		$divs = $divs.map(function() {
+			return undefined;
+		}).force();
+
+		equal( $divs.length, 0, "all elements are filtered" );
+	});
 })( jQuery, QUnit );

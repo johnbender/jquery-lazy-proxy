@@ -1,30 +1,30 @@
 jQuery.LazyProxy.init();
 
 for( var i = 0; i <= (window.testElementCount || 100); i++ ){
-  var div = document.createElement("div");
-  div.setAttribute("data-test", "true");
+	var div = document.createElement("div");
+	div.setAttribute("data-test", "true");
 	div.setAttribute("data-test-foo", "true");
-  $( div ).data("baz", "bak").appendTo( "body" );
+	$( div ).data("baz", "bak").appendTo( "body" );
 }
 
 var addClassRaw = function( elem ){
-  elem.setAttribute( "class", elem.getAttribute( "class" ) + " foo" );
-  return elem;
+	elem.setAttribute( "class", elem.getAttribute( "class" ) + " foo" );
+	return elem;
 };
 
 var clearClassRaw = function( elem ) {
-  elem.setAttribute( "class", "" );
-  return elem;
+	elem.setAttribute( "class", "" );
+	return elem;
 };
 
 $.fn.simpleAddClass = function(){
-  $.map(this, addClassRaw);
-  return this;
+	$.map(this, addClassRaw);
+	return this;
 };
 
 $.fn.simpleClearClass = function(){
-  $.map(this, clearClassRaw);
-  return this;
+	$.map(this, clearClassRaw);
+	return this;
 };
 
 $.fn.lazyClearClass = $.functor(clearClassRaw);
@@ -32,9 +32,9 @@ $.fn.lazyClearClass = $.functor(clearClassRaw);
 $.fn.lazyAddClass = $.functor(addClassRaw);
 
 $.fn.manualAddClearClass = function(){
-  $.map(this, function( elem ){
-    addClassRaw(clearClassRaw(elem));
-  });
+	$.map(this, function( elem ){
+		addClassRaw(clearClassRaw(elem));
+	});
 };
 
 $.fn.removeAttr.composable = function( value ) {
@@ -133,4 +133,37 @@ $.fn.cleanUpJustAttrs = function( fstAttrKey, sndAttrKey ) {
 	}
 
 	return this;
+};
+
+$.enhanceable = function( elem ) {
+	var e = elem, c;
+
+	while ( e ) {
+		c = e.getAttribute ? e.getAttribute( "data-enhance" ) : "";
+
+		if ( c === "false" ) {
+			return undefined;
+		}
+
+		e = e.parentNode;
+	}
+
+	return elem;
+};
+
+$.fn.enhanceable = function() {
+	var all = $.map( this, $.enhanceable );
+	return all;
+};
+
+$.fn.enhanceableCleanAttr = function( cleanAttr ) {
+	return $.map( this, function( elem ) {
+		elem = $.enhanceable( elem );
+
+		if( elem ){
+			$.removeAttr( elem, cleanAttr );
+		}
+
+		return elem;
+	});
 };
