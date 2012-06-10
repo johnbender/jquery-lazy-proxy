@@ -79,6 +79,10 @@ $divs.force()
 $divs.show() // any $.fn will do
 ```
 
+## Performance
+
+Obviously it's important to measure the situations in which the lazy proxy plugin and the underlying composition actually provide performance benefits. Existing information and planned performance tests are documented below.
+
 ### Lazy Fusion Performance
 
 Sadly the performance benefits of of the lazy loop fusion appear to be outweighed by the argument juggling required to support arbitrary arguments, and also possibly by the JIT compilers/similar optimizations in modern browsers. A simple [jsperf example](http://jsperf.com/lazy-loop-fusion-vs-traditional-method-chaning/5) shows that the vanilla method chaining (unfused loops) beats the LazyProxy approach (lazily fused loops) but looses out to simple fusion through function composition.
