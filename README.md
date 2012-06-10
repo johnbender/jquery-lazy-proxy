@@ -14,7 +14,7 @@ This is a simplification of the original `jQuery.LazyProxy` (which is still incl
 This library is only meant as a development tool as its inclusion does incur a performance penalty. Again, it is only meant to alert the developer to areas for quick performance wins. To begin just include jQuery and the proxies library.
 
 ```html
-<script type="text/javascript" src="jquery.js"></scrip>
+<script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="warning.js"></script>
 ```
 
@@ -35,7 +35,7 @@ This is a proof of concept for automatic loop fusion over jQuery sets using lazy
 [Loop fusion](http://en.wikipedia.org/wiki/Loop_fusion) is a fairly common performance optimization and in most cases results in must faster code. By making jquery `$.fn` methods lazy by placing a proxy in the prototype chain between a new jQuery object and its normal prototype `$.fn` this library tracks and can, in certain cases, perform automatic loop fusion.
 
 ```html
-<script type="text/javascript" src="jquery.js"></scrip>
+<script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="lazy.js"></script>
 ```
 
