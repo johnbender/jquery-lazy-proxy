@@ -79,8 +79,24 @@ $divs.force()
 $divs.show() // any $.fn will do
 ```
 
-### Performance
+### Lazy Fusion Performance
 
-Sadly the performance benefits of of the loop fusion appear to be outweighed by the argument juggling required to support arbitrary arguments, and also possibly by the JIT compilers/similar optimizations in modern browsers. A simple [jsperf example](http://jsperf.com/lazy-loop-fusion-vs-traditional-method-chaning/5) shows that the vanilla method chaining (unfused loops) beats the LazyProxy approach (lazily fused loops) but looses out to simple fusion through function composition.
+Sadly the performance benefits of of the lazy loop fusion appear to be outweighed by the argument juggling required to support arbitrary arguments, and also possibly by the JIT compilers/similar optimizations in modern browsers. A simple [jsperf example](http://jsperf.com/lazy-loop-fusion-vs-traditional-method-chaning/5) shows that the vanilla method chaining (unfused loops) beats the LazyProxy approach (lazily fused loops) but looses out to simple fusion through function composition.
 
 You can view the performance setup for the jsperf sample under `test/proxies-perf.js`
+
+### Manual Loop Fusion Performance
+
+In the interest of solidifying my understanding of when and where composition is a win I've constructed a few additional performance tests. At the time of this writing it appears that small element sets with faster/simpler functions provide speedups under compositions.
+
+Performances tests.
+
+1. [Remove attr and remove data composed vs chained](http://jsperf.com/remove-attr-and-remove-data-composed-vs-vanilla-chained)
+2. [Remove attr composed vs chained simple methods](http://jsperf.com/remove-attr-composed-vs-chained-simple-methods)
+3. [Closest attr check and remove attr composed vs chained](http://jsperf.com/closest-attr-check-and-remove-attr-composed-vs-chained)
+
+Performance tests still left TODO
+
+1. Chaining more than two methods
+2. Very small sets (< 5)
+3. Very large sets (> 100)
