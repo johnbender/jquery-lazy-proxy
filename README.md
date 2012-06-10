@@ -94,13 +94,13 @@ A possible solution the performance overhead of argument juggling would be to pu
 ```javascript
 $.fn.f.composable = function( a, b ){
   return function( elem ){
-    $.fn.f.htmlMorphism( a, b, elem );
+    return $.fn.f.htmlMorphism( a, b, elem );
   }
 }
 
 $.fn.g.composable = function( a ){
   return function( elem ){
-    $.fn.f.htmlMorphism( a, elem );
+    return $.fn.f.htmlMorphism( a, elem );
   }
 }
 ```
