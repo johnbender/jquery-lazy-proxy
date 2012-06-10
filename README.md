@@ -89,9 +89,33 @@ Sadly the performance benefits of of the lazy loop fusion appear to be outweighe
 
 You can view the performance setup for the jsperf sample under `test/proxies-perf.js`
 
+A possible solution the performance overhead of argument juggling would be to push it down to the method/plugin developer with a composable function that partially applies the initial arguments arguments on a per method basis. Eg
+
+```javascript
+$.fn.f.composable = function( a, b ){
+  return function( elem ){
+    $.fn.f.htmlMorphism( a, b, elem );
+  }
+}
+
+$.fn.g.composable = function( a ){
+  return function( elem ){
+    $.fn.f.htmlMorphism( a, elem );
+  }
+}
+```
+
+Then, given another composable jQuery method the composition would look something like:
+
+```javascript
+$.compose( $.fn.f.composable( "foo", "bar" ), $.fn.g.composable( "baz" ) );
+```
+
+As a result the lazy proxy could remove the argument slicing in it's composition [composition function](https://github.com/johnbender/jquery-lazy-proxy/blob/aa86d76c353b4e3f66860bd21c9fc0edf0d90f07/lazy.js#L31)
+
 ### Manual Loop Fusion Performance
 
-In the interest of solidifying my understanding of when and where composition is a win I've constructed a few additional performance tests. At the time of this writing it appears that small element sets with faster/simpler functions provide speedups under compositions.
+In the interest of solidifying my understanding of when and where composition is a win I've constructed a few additional performance tests. At the time of this writing it appears that small element sets with faster/simpler functions provide speedups under composition.
 
 Performances tests.
 
