@@ -105,13 +105,13 @@ $.fn.g.composable = function( a ){
 }
 ```
 
-Then, given another composable jQuery method the composition would look something like:
+Then, given a simple composition function for html morphisms:
 
 ```javascript
 $.compose( $.fn.f.composable( "foo", "bar" ), $.fn.g.composable( "baz" ) );
 ```
 
-As a result the lazy proxy could remove the argument slicing in it's composition [composition function](https://github.com/johnbender/jquery-lazy-proxy/blob/aa86d76c353b4e3f66860bd21c9fc0edf0d90f07/lazy.js#L31)
+As a result the lazy proxy could remove the argument slicing in it's [compose method](https://github.com/johnbender/jquery-lazy-proxy/blob/aa86d76c353b4e3f66860bd21c9fc0edf0d90f07/lazy.js#L31)
 
 ### Manual Loop Fusion Performance
 
