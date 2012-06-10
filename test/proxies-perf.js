@@ -152,12 +152,13 @@ $.enhanceable = function( elem ) {
 };
 
 $.fn.enhanceable = function() {
-	var all = $.map( this, $.enhanceable );
-	return all;
+	return this.map(function( i, elem ) {
+		return $.enhanceable( elem );
+	});
 };
 
 $.fn.enhanceableCleanAttr = function( cleanAttr ) {
-	return $.map( this, function( elem ) {
+	return this.map(function( i, elem ) {
 		elem = $.enhanceable( elem );
 
 		if( elem ){
