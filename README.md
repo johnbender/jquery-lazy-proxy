@@ -32,7 +32,7 @@ This is a proof of concept for automatic loop fusion over jQuery sets using lazy
 
 ### Operation
 
-[Loop fusion](http://en.wikipedia.org/wiki/Loop_fusion) is a fairly common performance optimization and in most cases results in must faster code. By making jquery `$.fn` methods lazy by placing a proxy in the prototype chain between a new jQuery object and its normal prototype `$.fn` this library tracks and can, in certain cases, perform automatic loop fusion.
+[Loop fusion](http://en.wikipedia.org/wiki/Loop_fusion) is a fairly common performance optimization and in most cases results in faster code. By making jquery `$.fn` methods lazy by placing a proxy in the prototype chain between a new jQuery object and its normal prototype `$.fn` this library tracks and can, in certain cases, perform automatic loop fusion.
 
 ```html
 <script type="text/javascript" src="jquery.js"></script>
