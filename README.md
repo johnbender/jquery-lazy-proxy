@@ -5,6 +5,48 @@ For either of the proxy objects to have any value, plug-in authors and ideally t
 * http://johnbender.us/2012/02/29/faster-javascript-through-category-theory/
 * http://johnbender.github.com/auto-jquery-optimization-paper/ (work in progress)
 
+### `composable`
+
+The simplest and most flexible method for exposing the `HTMLElement` altering function that may underlie a given jQuery method is to use the `composable` attribute as a function to partially apply arguments. An example:
+
+```javascript
+$.fn.f.composable = function( a, b ){
+  return function( elem ){
+    return $.fn.f.htmlMorphism( a, b, elem );
+  }
+}
+
+$.fn.g.composable = function( a ){
+  return function( elem ){
+    return $.fn.f.htmlMorphism( a, elem );
+  }
+}
+```
+
+Then, given a simple composition function for html morphisms:
+
+```javascript
+$.compose( $.fn.f.composable( "foo", "bar" ), $.fn.g.composable( "baz" ) );
+```
+
+Mind you that this is not general in the sense that you can't define your own new jQuery method with it because the arguments would be different at each invocation but the overhead would be negligible. Additionally, because of JavaScript's variable function argument capture a generic form of this composable function could be provided to apply some arbitrary number of arguments sure to exceed those in practical use. Eg:
+
+```javascript
+$.createComposable = function( fn, a, b, c, d, e, f, g ){
+  return function( elem ){
+    return fn( elem, a, b, c, d, e, f, g );
+  };
+}
+```
+
+which would see use in the form:
+
+```javascript
+$.createComposable( $.fn.f.composable, "foo, "bar" );
+```
+
+More thought required, though it seems requiring the definition of composable as a function is a cleaner standard.
+
 ## jQuery.WarningProxy
 
 This is a simplification of the original `jQuery.LazyProxy` (which is still included in the repository for further work). The idea is that developers should receive warnings when they are chaining one or more `$.fn` methods that iterate over the full set and have the pure function available for composition/fusing.
@@ -88,30 +130,6 @@ Obviously it's important to measure the situations in which the lazy proxy plugi
 Sadly the performance benefits of of the lazy loop fusion appear to be outweighed by the argument juggling required to support arbitrary arguments, and also possibly by the JIT compilers/similar optimizations in modern browsers. A simple [jsperf example](http://jsperf.com/lazy-loop-fusion-vs-traditional-method-chaning/5) shows that the vanilla method chaining (unfused loops) beats the LazyProxy approach (lazily fused loops) but looses out to simple fusion through function composition.
 
 You can view the performance setup for the jsperf sample under `test/proxies-perf.js`
-
-A possible solution the performance overhead of argument juggling would be to push it down to the method/plugin developer with a composable function that partially applies the initial arguments arguments on a per method basis. Eg
-
-```javascript
-$.fn.f.composable = function( a, b ){
-  return function( elem ){
-    return $.fn.f.htmlMorphism( a, b, elem );
-  }
-}
-
-$.fn.g.composable = function( a ){
-  return function( elem ){
-    return $.fn.f.htmlMorphism( a, elem );
-  }
-}
-```
-
-Then, given a simple composition function for html morphisms:
-
-```javascript
-$.compose( $.fn.f.composable( "foo", "bar" ), $.fn.g.composable( "baz" ) );
-```
-
-As a result the lazy proxy could remove the argument slicing in it's [compose method](https://github.com/johnbender/jquery-lazy-proxy/blob/aa86d76c353b4e3f66860bd21c9fc0edf0d90f07/lazy.js#L31)
 
 ### Manual Loop Fusion Performance
 
