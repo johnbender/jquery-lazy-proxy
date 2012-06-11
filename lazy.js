@@ -49,7 +49,8 @@
 
 			return function() {
 				var proxy = this._proxy,
-					state = this._proxyState;
+					state = this._proxyState,
+					result;
 
 				if( property.htmlMorphism ) {
 					state.composed = proxy.compose( property.htmlMorphism, arguments, state.composed || proxy.identity );
@@ -57,10 +58,10 @@
 					return this;
 				} else {
 					if( state.composed ) {
-						return proxy.force.call( this );
+						result = proxy.force.call( this );
 					}
 
-					return property.apply( this, arguments );
+					return property.apply( result || this, arguments );
 				}
 			};
 		}

@@ -123,4 +123,18 @@
 
 		equal( $divs.length, 0, "all elements are filtered" );
 	});
+
+	test( "methods should work after a force", function() {
+		var $divs = $( "<div data-foo='bar'>");
+
+		$.fn.foo = jQuery.functor(function( elem ){
+			return elem;
+		});
+
+		equal( $divs.first().attr("data-foo"), "bar", "attribute foo is removed" );
+
+		$divs.foo().removeAttr( "data-foo" );
+
+		equal( $divs.first().attr("data-foo"), undefined, "attribute foo is removed" );
+	});
 })( jQuery, QUnit );
