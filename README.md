@@ -42,7 +42,7 @@ $.createComposable = function( fn, a, b, c, d, e, f, g ){
 which would see use in the form:
 
 ```javascript
-$.createComposable( $.fn.f.composable, "foo, "bar" );
+$.createComposable( $.fn.f.composable, "foo", "bar" );
 ```
 
 More thought required, though it seems requiring the definition of composable as a function is a cleaner standard.
