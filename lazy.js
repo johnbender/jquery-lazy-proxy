@@ -47,13 +47,13 @@
 		insert: function( prop ){
 			var property = jQuery.fn[ prop ];
 
-			return function() {
+			return function( a, b, c, d, e, f, g ) {
 				var proxy = this._proxy,
 					state = this._proxyState,
 					result;
 
-				if( property.htmlMorphism ) {
-					state.composed = proxy.compose( property.htmlMorphism, arguments, state.composed || proxy.identity );
+				if( property.composable ) {
+					state.composed = proxy.compose( property.composable, arguments, state.composed || proxy.identity );
 
 					return this;
 				} else {
@@ -71,18 +71,18 @@
 		return this._proxy.force.call( this );
 	};
 
-	jQuery.functor = function( htmlMorphism ) {
+	jQuery.functor = function( composable ) {
 		var fnMethod = function(){
 			var argsArray = Array.prototype.slice.call( arguments );
 
 			return this.map(function( i, elem ){
 				var args = argsArray;
 				args.unshift( elem );
-				return htmlMorphism.apply( elem, args );
+				return composable.apply( elem, args );
 			});
 		};
 
-		fnMethod.htmlMorphism = htmlMorphism;
+		fnMethod.composable = composable;
 		return fnMethod;
 	};
 
