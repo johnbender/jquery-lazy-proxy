@@ -27,13 +27,9 @@
 			return elem;
 		},
 
-		// TODO assignment of properties directly on this may be faster
-		compose: function( a, aArgs, b ) {
+		compose: function( a, b ) {
 			return function( elem ){
-				var args = Array.prototype.slice.call(aArgs);
-
-				args.unshift(b.call( elem, elem ));
-				return a.apply( elem, args );
+				return a(b(elem));
 			};
 		},
 
@@ -47,13 +43,15 @@
 		insert: function( prop ){
 			var property = jQuery.fn[ prop ];
 
+			// NOTE explicity argument capture for speed
 			return function( a, b, c, d, e, f, g ) {
 				var proxy = this._proxy,
 					state = this._proxyState,
-					result;
+					result, composableFn;
 
 				if( property.composable ) {
-					state.composed = proxy.compose( property.composable, arguments, state.composed || proxy.identity );
+					composableFn = property.composable( a, b, c, d, e, f, g );
+					state.composed = proxy.compose( composableFn, state.composed || proxy.identity );
 
 					return this;
 				} else {
@@ -72,17 +70,18 @@
 	};
 
 	jQuery.functor = function( composable ) {
-		var fnMethod = function(){
-			var argsArray = Array.prototype.slice.call( arguments );
-
+		var fnMethod = function( a, b, c, d, e, f, g ) {
 			return this.map(function( i, elem ){
-				var args = argsArray;
-				args.unshift( elem );
-				return composable.apply( elem, args );
+				return composable( elem, a, b, c, d, e, f, g );
 			});
 		};
 
-		fnMethod.composable = composable;
+		fnMethod.composable = function( a, b, c, d, e, f, g ) {
+			return function( elem ) {
+				return composable( elem, a, b, c, d, e, f, g );
+			};
+		};
+
 		return fnMethod;
 	};
 
