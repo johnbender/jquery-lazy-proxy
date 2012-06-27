@@ -176,3 +176,17 @@ $.fn.removeThreeAttrs = function( fst, snd, thd ){
 		jQuery.removeAttr( this, thd );
 	});
 };
+
+$.fn.removeThreeAttrsInternalChain = function( fst, snd, thd ){
+	return this.each(function() {
+		jQuery.removeAttr( this, fst );
+	});
+
+	return this.each(function() {
+		jQuery.removeAttr( this, snd );
+	});
+
+	return this.each(function() {
+		jQuery.removeAttr( this, thd );
+	});
+};
