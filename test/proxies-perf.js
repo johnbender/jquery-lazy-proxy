@@ -178,11 +178,11 @@ $.fn.removeThreeAttrs = function( fst, snd, thd ){
 };
 
 $.fn.removeThreeAttrsInternalChain = function( fst, snd, thd ){
-	return this.each(function() {
+	this.each(function() {
 		jQuery.removeAttr( this, fst );
 	});
 
-	return this.each(function() {
+	this.each(function() {
 		jQuery.removeAttr( this, snd );
 	});
 
