@@ -168,3 +168,11 @@ $.fn.enhanceableCleanAttr = function( cleanAttr ) {
 		return elem;
 	});
 };
+
+$.fn.removeThreeAttrs = function( fst, snd, thd ){
+	return this.each(function(i, elem) {
+		$.removeAttr( elem, fst );
+		$.removeAttr( elem, snd );
+		$.removeAttr( elem, thd );
+	});
+};
