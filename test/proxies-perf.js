@@ -170,9 +170,13 @@ $.fn.enhanceableCleanAttr = function( cleanAttr ) {
 };
 
 $.fn.removeThreeAttrs = function( fst, snd, thd ){
-	return this.each(function(i, elem) {
+	var length = this.length, elem;
+	while( length-- ){
+		elem = this[length];
 		$.removeAttr( elem, fst );
 		$.removeAttr( elem, snd );
 		$.removeAttr( elem, thd );
-	});
+	}
+
+	return this;
 };
