@@ -156,15 +156,18 @@ $.fn.enhanceable = function() {
 };
 
 $.fn.enhanceableCleanAttr = function( cleanAttr ) {
-	return this.map(function( i, elem ) {
+	var length = this.length, elem;
+
+	while( length-- ){
+		elem = this[length];
 		elem = $.enhanceable( elem );
 
 		if( elem ){
 			$.removeAttr( elem, cleanAttr );
 		}
+	};
 
-		return elem;
-	});
+	return this;
 };
 
 $.fn.removeThreeAttrs = function( fst, snd, thd ){

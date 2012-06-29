@@ -138,7 +138,7 @@ In the interest of solidifying my understanding of when and where composition is
 Performances tests.
 
 1. [Remove attr and remove data composed vs chained](http://jsperf.com/remove-attr-and-remove-data-composed-vs-vanilla-chained)
-2. [Remove attr composed vs chained simple methods](http://jsperf.com/remove-attr-composed-vs-chained-simple-methods)
+2. [Remove attr composed vs chained simple methods](http://jsperf.com/remove-attr-composed-vs-chained-simple-methods/2)
 3. [Closest attr check and remove attr composed vs chained](http://jsperf.com/closest-attr-check-and-remove-attr-composed-vs-chained)
 4. [Add class and clear class composed vs chained](http://jsperf.com/add-class-and-clear-class-composed-vs-chained)
 
